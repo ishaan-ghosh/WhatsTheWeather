@@ -12,8 +12,17 @@ import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
 
+/*
+import kotlinx.android.synthetic.main.activity_main.*
+import android.support.v7.app.AppCompatActivity
+import android.os.Bundle
+ */
+import android.widget.Button
+import android.widget.Toast
+
+
 class MainActivity : AppCompatActivity() {
-    val CITY: String = "dhaka,bd"
+    val CITY: String = "tucson,us"//  "dhaka,bd"
     val API: String = "f5979ed4f3b30e4e3dcc9c934eaeaa9f"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,6 +30,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         weatherTask().execute()
+
+        // Special feature - Polymorphism: converts a TextView to a Button
+        val btn_click_me = findViewById<TextView>(R.id.changeDegBtn) // as Button // (Button) //findViewById(R.id.changeDegBtn) as Button
+        // set on-click listener
+        btn_click_me.setOnClickListener (object:View.OnClickListener {
+            override fun onClick(p0: View?) {
+                TODO("Not yet implemented")
+                // your code to perform when the user clicks on the button
+                Toast.makeText(this@MainActivity, "You clicked me.", Toast.LENGTH_SHORT).show()
+            }
+        })
 
     }
 
@@ -34,9 +54,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun doInBackground(vararg params: String?): String? {
+            val units = "imperial"
             var response:String?
             try{
-                response = URL("https://api.openweathermap.org/data/2.5/weather?q=$CITY&units=metric&appid=$API").readText(
+                response = URL("https://api.openweathermap.org/data/2.5/weather?q=$CITY&units="+units+"&appid=$API").readText(
                     Charsets.UTF_8
                 )
             }catch (e: Exception){
@@ -59,7 +80,8 @@ class MainActivity : AppCompatActivity() {
                 val updatedAtText = "Updated at: "+ SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.ENGLISH).format(
                     Date(updatedAt*1000)
                 )
-                val temp = main.getString("temp")+"°C"
+                val label = "°F"
+                val temp = main.getString("temp")+label
                 val tempMin = "Min Temp: " + main.getString("temp_min")+"°C"
                 val tempMax = "Max Temp: " + main.getString("temp_max")+"°C"
                 val pressure = main.getString("pressure")
