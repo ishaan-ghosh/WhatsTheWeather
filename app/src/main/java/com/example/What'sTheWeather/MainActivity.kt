@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         // set on-click listener
         btn_click_me.setOnClickListener (object:View.OnClickListener {
             override fun onClick(p0: View?) {
-                TODO("Not yet implemented")
+//                TODO("Not yet implemented")
                 // your code to perform when the user clicks on the button
                 Toast.makeText(this@MainActivity, "You clicked me.", Toast.LENGTH_SHORT).show()
             }
