@@ -22,7 +22,7 @@ import android.widget.Toast
 
 
 class MainActivity : AppCompatActivity() {
-    val CITY: String = "tucson,us"//  "dhaka,bd"
+    var city = "tucson,us"//  "dhaka,bd"
     val API: String = "f5979ed4f3b30e4e3dcc9c934eaeaa9f"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,13 +32,15 @@ class MainActivity : AppCompatActivity() {
         weatherTask().execute()
 
         // Special feature - Polymorphism: converts a TextView to a Button
-        val btn_click_me = findViewById<TextView>(R.id.changeDegBtn) // as Button // (Button) //findViewById(R.id.changeDegBtn) as Button
+        val btn_click_me = findViewById<TextView>(R.id.goSearchBut) // as Button // (Button) //findViewById(R.id.changeDegBtn) as Button
         // set on-click listener
         btn_click_me.setOnClickListener (object:View.OnClickListener {
             override fun onClick(p0: View?) {
 //                TODO("Not yet implemented")
                 // your code to perform when the user clicks on the button
-                Toast.makeText(this@MainActivity, "You clicked me.", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(this@MainActivity, "You clicked me.", Toast.LENGTH_SHORT).show()
+                city = findViewById<TextView>(R.id.cityString).text.toString()
+                weatherTask().execute()
             }
         })
 
@@ -57,7 +59,7 @@ class MainActivity : AppCompatActivity() {
             val units = "imperial"
             var response:String?
             try{
-                response = URL("https://api.openweathermap.org/data/2.5/weather?q=$CITY&units="+units+"&appid=$API").readText(
+                response = URL("https://api.openweathermap.org/data/2.5/weather?q="+city+"&units="+units+"&appid=$API").readText(
                     Charsets.UTF_8
                 )
             }catch (e: Exception){
