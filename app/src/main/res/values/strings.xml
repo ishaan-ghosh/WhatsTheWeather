@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">TestApp3</string>
+    <string name="globalUnits">imperial</string>
 </resources>
