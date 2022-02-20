@@ -6,6 +6,8 @@ buildscript {
 //        val kotlin_version =
         ext.kotlin_version = "1.6.10"
         classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
+
+//        implementation 'com.squareup.okhttp3:okhttp:3.8.1'
     }
 }
 

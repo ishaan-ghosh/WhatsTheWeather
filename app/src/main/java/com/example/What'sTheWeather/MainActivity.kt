@@ -1,24 +1,32 @@
 package com.example.testapp3
 
-import android.os.AsyncTask
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.view.View
-import android.widget.ProgressBar
-import android.widget.RelativeLayout
-import android.widget.TextView
-import org.json.JSONObject
-import java.net.URL
-import java.text.SimpleDateFormat
-import java.util.*
-
 /*
 import kotlinx.android.synthetic.main.activity_main.*
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
  */
-import android.widget.Button
-import android.widget.Toast
+
+import android.os.AsyncTask
+import android.os.Bundle
+import android.view.View
+import android.widget.ProgressBar
+import android.widget.RelativeLayout
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import org.json.JSONObject
+import java.net.URL
+//import java.net.http.HttpRequest
+//import java.net.http.HttpResponse
+import java.text.SimpleDateFormat
+import java.util.*
+
+//import okhttp3.OkHttpClient
+//import okhttp3.Request
+//import java.io.IOException
+////import okhttp3.MediaType.Companion.toMediaType
+////import okhttp3.RequestBody.Companion.toRequestBody
+//import com.squareup.okhttp.OkHttpClient;
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -27,12 +35,34 @@ class MainActivity : AppCompatActivity() {
 
     var units = "imperial"
     var deg = "°F"
+    var wind_units = "mph"
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         weatherTask().execute()
+
+//        // VisualCrossing (Kotlin, rapidapi.com):
+//        val client = OkHttpClient()
+//
+//        val request = Request.Builder()
+//            .url("https://visual-crossing-weather.p.rapidapi.com/forecast?aggregateHours=24&location=Washington%2CDC%2CUSA&contentType=csv&unitGroup=us&shortColumnNames=0")
+//            .get()
+//            .addHeader("x-rapidapi-host", "visual-crossing-weather.p.rapidapi.com")
+//            .addHeader("x-rapidapi-key", "SIGN-UP-FOR-KEY")
+//            .build()
+//
+//        val response = client.newCall(request).execute()
+//
+//        // VisualCrossing (from Java):
+//        val request: java.net.http.HttpRequest = java.net.http.HttpRequest.newBuilder()
+//            .uri(URI.create("https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/tucson?unitGroup=metric&key=6DSK2NXVH9XAPD9KEBGFK36K6&contentType=json"))
+//            .method("GET", java.net.http.HttpRequest.BodyPublishers.noBody()).build()
+//        val response: java.net.http.HttpResponse = HttpClient.newHttpClient()
+//            .send(request, java.net.http.HttpResponse.BodyHandlers.ofString())
+//        println(response.body())
 
         // Special feature - Polymorphism: converts a TextView to a Button
         val btn_click_me = findViewById<TextView>(R.id.goSearchBut) // as Button // (Button) //findViewById(R.id.changeDegBtn) as Button
@@ -58,15 +88,19 @@ class MainActivity : AppCompatActivity() {
                 if (units == "metric") {
                     units = "imperial"
                     deg = "°F"
+                    wind_units = "mph"
                 } else if (units == "imperial") {
                     units = "metric"
                     deg = "°C"
+                    wind_units = "m/s"
                 }
 
                 weatherTask().execute()
             }
         })
     }
+
+
 
     inner class weatherTask() : AsyncTask<String, Void, String>() {
         override fun onPreExecute() {
@@ -81,9 +115,21 @@ class MainActivity : AppCompatActivity() {
 //            val units = "imperial"
             var response:String?
             try{
+                // Current
                 response = URL("https://api.openweathermap.org/data/2.5/weather?q="+city+"&units="+units+"&appid=$API").readText(
                     Charsets.UTF_8
                 )
+
+                // 16-day
+//                response = URL("https://api.openweathermap.org/data/2.5/forecast/daily?q=London&units=metric&cnt=7&appid=$API").readText(
+//                    Charsets.UTF_8
+//                )
+
+                // 5-day
+//                response = URL("http://api.openweathermap.org/data/2.5/forecast?id=524901&lang=en&appid=$API").readText(
+//                    Charsets.UTF_8
+//                )
+
             }catch (e: Exception){
                 response = null
             }
@@ -100,9 +146,15 @@ class MainActivity : AppCompatActivity() {
                 val wind = jsonObj.getJSONObject("wind")
                 val weather = jsonObj.getJSONArray("weather").getJSONObject(0)
 
+//                val list_main = jsonObj.getJSONArray("list").getJSONObject(1)
+//                val sea_level = list_main.getString("sea_level")
+//
+//                val sea_level = jsonObj.getJSONObject("main").getString("sea_level")
+
 //                val minutely = jsonObj.getJSONArray("minutely").getJSONObject(0)
 //                val precip = minutely.getString("precipitation")
                 val clouds = jsonObj.getJSONObject("clouds")
+
 
 
                 val updatedAt:Long = jsonObj.getLong("dt")
@@ -111,20 +163,35 @@ class MainActivity : AppCompatActivity() {
                 )
 //                val label = "°F"
 
-                val all = clouds.getString("all")
+
 
                 val temp = main.getString("temp")+deg
                 val feels_like = main.getString("feels_like")+deg
-                val tempMin = "Min Temp: " + main.getString("temp_min")+deg
-                val tempMax = "Max Temp: " + main.getString("temp_max")+deg
-                val pressure = main.getString("pressure")
-                val humidity = main.getString("humidity")
+//                val minTemp = "Min Temp: " + main.getString("temp_min")+deg
+//                val maxTemp = "Max Temp: " + main.getString("temp_max")+deg
 
+                // () version:
+//                val minTemp = "Min Temp \n" + "       " + main.getString("temp_min")+deg
+//                val maxTemp = "Max Temp\n" + "        " + main.getString("temp_max")+deg
+//                val pressure = "Pressure\n" + "       " + main.getString("pressure")+" hPa"
+//                val humidity = "Humidity\n" + "       " + main.getString("humidity")+"%"
+//                val sunrise:Long = sys.getLong("sunrise")
+//                val sunset:Long = sys.getLong("sunset")
+//                val windSpeed = "Wind (" + wind_units + ")\n" + "       " + wind.getString("speed")+" "+wind_units
+//                val all = "Clouds\n" + "       " + clouds.getString("all")+"%"
+//                val weatherDescription = weather.getString("description")
+//                val address = jsonObj.getString("name")+", "+sys.getString("country")
+
+                // units version:
+                val minTemp = main.getString("temp_min")+deg
+                val maxTemp = main.getString("temp_max")+deg
+                val pressure = main.getString("pressure")+" hPa"
+                val humidity = main.getString("humidity")+"%"
                 val sunrise:Long = sys.getLong("sunrise")
                 val sunset:Long = sys.getLong("sunset")
-                val windSpeed = wind.getString("speed")
+                val windSpeed = wind.getString("speed")+" "+wind_units
+                val all = clouds.getString("all")+"%"
                 val weatherDescription = weather.getString("description")
-
                 val address = jsonObj.getString("name")+", "+sys.getString("country")
 
                 /* Populating extracted data into our views */
@@ -134,9 +201,9 @@ class MainActivity : AppCompatActivity() {
                 findViewById<TextView>(R.id.address).text = address
                 findViewById<TextView>(R.id.updated_at).text =  updatedAtText
                 findViewById<TextView>(R.id.status).text = weatherDescription.capitalize()
-                findViewById<TextView>(R.id.temp).text = temp // temp
-                findViewById<TextView>(R.id.temp_min).text = tempMin
-                findViewById<TextView>(R.id.temp_max).text = tempMax
+                findViewById<TextView>(R.id.temp).text = temp // sea_level
+                findViewById<TextView>(R.id.min_temp).text = minTemp // was tempMin
+                findViewById<TextView>(R.id.max_temp).text = maxTemp // was tempMax
                 findViewById<TextView>(R.id.sunrise).text = SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(
                     Date(sunrise*1000)
                 )
