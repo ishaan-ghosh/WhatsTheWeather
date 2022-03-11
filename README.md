@@ -4,3 +4,5 @@ Using it is as easy as typing the name of a city into the search bar and clickin
 You can also change the units of measurement from imperial to metric using the "C|F" button. 
 We also added a light/dark mode feature into the application, this can be toggled using the "theme" toggle.
 We illustrate multiple ideas in our Kotlin code, some of which include: AsyncTasks, Polymorphism, Higher-order and lambda functions. 
+
+To run the app, you will need to install Android Studio as well as an android studio integrated android emulator. Once installed, it is as simple as importing the project and running the main .kt file located at "app/src/main/java/com/example/What'sTheWeather"
